@@ -67,6 +67,11 @@ toolbox.sum = function(array) {
 // ex.
 //  product([2, -3]) -> -6
 toolbox.product = function(array) {
+  let total = 1;
+  array.forEach(function(item, index) {
+    total *=item;
+  });
+  return total;
   // YOUR CODE HERE
 }
 
@@ -93,9 +98,9 @@ toolbox.transform = function(array, fn) {
 // where fn(item) is true (thruthy).
 //
 // ex.
-//  function isEven(n) {
-//    return (num % 2) == 0;
-//  }
+ // function isEven(n) {
+ //   return (num % 2) == 0;
+ // }
 //  filter([1, 2, 3, 4, 5, 6], isEven) -> [2, 4, 6]
 // ex.
 //  function isLong(string) {
@@ -103,6 +108,13 @@ toolbox.transform = function(array, fn) {
 //  }
 //  filter(['a', 'abc', 'abcdefghijk'], isLong) -> ['abcdefghijk']
 toolbox.filter = function(array, fn) {
+  let newArray = [];
+  array.forEach(function(item) {
+    if(fn(item)) {
+      newArray.push(item);
+    }
+  });
+  return newArray;
   // YOUR CODE HERE
 }
 
@@ -113,10 +125,10 @@ toolbox.filter = function(array, fn) {
 // If you have difficulty using Array.forEach() here, it's ok to use a regular
 // for loop.
 //
-// ex.
-//  function isEven(n) {
-//    return (num % 2) == 0;
-//  }
+// ex.{
+ // function isEven(n) {
+ //   return (num % 2) == 0;
+ // }
 //  every([], isEven) -> true
 //  every([2, 4], isEven) -> true
 //  every([1, 2, 3, 4, 5, 6], isEven) -> false
@@ -128,6 +140,13 @@ toolbox.filter = function(array, fn) {
 //  every(['abcdefghijk'], isLong) -> true
 //  every(['a', 'abc', 'abcdefghijk'], isLong) -> false
 toolbox.every = function(array, fn) {
+  let truthy = true;
+  array.forEach(function(item) {
+    if(!fn(item)) {
+      truthy = false;
+    }
+  });
+  return truthy;
   // YOUR CODE HERE
 }
 
@@ -148,6 +167,13 @@ toolbox.every = function(array, fn) {
 //  find([1, 3, 5], isEven) -> -1
 //  find([1, 2, 3, 4, 5, 6], isEven) -> 1
 toolbox.find = function(array, fn) {
+  let index = -1;
+  array.forEach(function(item, num) {
+    if(fn(item) && index === -1) {
+      index = num;
+    }
+  });
+  return index;
   // YOUR CODE HERE
 }
 
@@ -160,5 +186,15 @@ toolbox.find = function(array, fn) {
 //  zip(['moe', 'larry', 'curly'], [30, 40, 50]) ->
 //    [["moe", 30], ["larry", 40], ["curly", 50]]
 toolbox.zip = function(array1, array2) {
+  let newArr = [];
+  if(array1.length === array2.length) {
+    for (let i = 0; i < array1.length; i++) {
+      let x = [];
+      x.push(array1[i]);
+      x.push(array2[i]);
+      newArr.push(x);
+    }
+  }
+  return newArr;
   // YOUR CODE HERE
 }

@@ -28,7 +28,7 @@ console.log("The value stored inside the object is (bracket notation)", toolbox.
 // an object or change things that are already there
 toolbox.object.something = 11;
 toolbox.object["something"] = 12;
-
+// console.log(toolbox.object.something);
 // Let's write some functions that operate on objects.
 
 // Example 4.1 keys(object)
@@ -61,6 +61,14 @@ toolbox.keys = function(object) {
 // ex. toolbox.values({a: 1, b: 1}) -> [1, 1]
 // ex. toolbox.values({a: 1, b: 1, c: 2}) -> [1, 1, 2]
 toolbox.values = function(object) {
+  let rArr = [];
+  for (let key in object) {
+    // if(object.hasOwnProperty(key)) {
+    //   console.log(key);
+      rArr.push(object[key]);
+    // }
+  }
+  return rArr;
   // YOUR CODE HERE
 }
 
@@ -74,6 +82,14 @@ toolbox.values = function(object) {
 // ex. toolbox.values({a: 1, b: 1, c: 2}) -> [[a, 1], [b, 1], [c, 2]]
 toolbox.pairs = function(object) {
   // YOUR CODE HERE
+  let rArr = [];
+  for (let key in object) {
+    let Arr = [];
+    Arr.push(key);
+    Arr.push(object[key]);
+    rArr.push(Arr);
+  }
+  return rArr;
 }
 
 // Example 4.4 filterKey(object, fun)
@@ -109,6 +125,15 @@ toolbox.filterKey = function(object, fun) {
 // ex. pick({a: 1}, ['a', 'b']) -> {a: 1}
 // ex. pick({a: 1, b: 2}, ['a', 'b']) -> {a: 1, b: 2}
 toolbox.pick = function(object, keysArray) {
+  let nObj = {};
+  for (let key in object) {
+    keysArray.forEach(function(item) {
+      if(key === item ) {
+        nObj[key] = object[key];
+      }
+    });
+  }
+  return nObj;
   // YOUR CODE HERE
 }
 
@@ -124,5 +149,8 @@ toolbox.pick = function(object, keysArray) {
 //  propertyGetter('b') -> 2
 // ex. toolbox.propertyOf({a: 1})('a') -> 1
 toolbox.propertyOf = function(object) {
+  return function(n) {
+    return object[n];
+  }
   // YOUR CODE HERE
 }

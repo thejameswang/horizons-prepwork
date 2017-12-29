@@ -47,6 +47,8 @@ toolbox.run = function(fun) {
 // }
 // runOneAfterAnother(logA, logB) -> outputs to console 'A' followed by 'B'
 toolbox.runOneAfterAnother = function(fun1, fun2) {
+  fun1();
+  fun2();
   // YOUR CODE HERE
 }
 
@@ -78,6 +80,9 @@ toolbox.getDoubler = function() {
 // ex.
 //  getMultiplier(3)(4) -> 12
 toolbox.getMultiplier = function(n) {
+  return function(m) {
+    return m * n;
+  }
   // YOUR CODE HERE
 }
 
@@ -119,5 +124,16 @@ toolbox.once = function(f) {
 //  onlyLog(); -> does nothing
 //  onlyLog(); -> does nothing
 toolbox.only = function(n, f) {
+  let called = false;
+  let count = 0;
+  return function() {
+    if(! called) {
+      f();
+      count++;
+      if (count === n) {
+        called = true;
+      }
+    }
+  }
   // YOUR CODE HERE
 }
