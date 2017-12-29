@@ -55,6 +55,11 @@ toolbox.countEven = function(n) {
 // See indexOf() from the underscore.js library:
 // http://underscorejs.org/#indexOf
 toolbox.indexOf = function(array, item) {
+    return toolbox.find(array, function(n) {
+        if(n === item) {
+            return true;
+        }
+    });
   // YOUR CODE HERE
 }
 
@@ -82,6 +87,16 @@ toolbox.indexOf = function(array, item) {
 // See lastIndexOf() from the underscore.js library:
 // http://underscorejs.org/#lastIndexOf
 toolbox.lastIndexOf = function(array, item) {
+    if (toolbox.find(array,function(n) {
+        return n===item;
+    }) === -1) {
+        return -1;
+    } else {
+        return array.length - 1 - toolbox.find(array.reverse(),function(n) {
+        return n===item;
+    });
+    }
+
   // YOUR CODE HERE
 }
 
@@ -104,6 +119,13 @@ toolbox.lastIndexOf = function(array, item) {
 // See negate() from the underscore.js library:
 // http://underscorejs.org/#negate
 toolbox.negate = function(fun) {
+    return function(n) {
+        if(fun(n)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
   // YOUR CODE HERE
 }
 
@@ -128,6 +150,9 @@ toolbox.negate = function(fun) {
 // See reject() from the underscore.js library:
 // http://underscorejs.org/#reject
 toolbox.reject = function(array, fun) {
+    return toolbox.filter(array, function(item) {
+        return toolbox.negate(fun)(item);
+    });
   // YOUR CODE HERE
 }
 
@@ -144,5 +169,9 @@ toolbox.reject = function(array, fun) {
 // See difference() from the underscore.js library:
 // http://underscorejs.org/#difference
 toolbox.difference = function(array1, array2) {
+
+    return toolbox.filter(array1, function(item) {
+        return toolbox.indexOf(array2,item) === -1;
+    });
   // YOUR CODE HERE
 }
