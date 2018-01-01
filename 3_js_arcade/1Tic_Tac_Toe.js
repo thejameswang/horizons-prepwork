@@ -43,7 +43,15 @@ tictactoe.errorIfNotXOrO = function(xOrO) {
 tictactoe.getOtherSide = function(xOrO) {
   // YOUR CODE HERE
   // Remove the next line!
-  throw "tictactoe.getOtherSide() not implemented, you should implement it.";
+  if(xOrO === 'x') {
+    return 'o';
+  }
+  else if(xOrO ==='o') {
+    return 'x';
+  } else {
+    throw "This should be 'x' or 'o', but it's '" + xOrO + "' instead.";// return tictacoe.errorIfNotXOrO(xOrO);
+  }
+  // throw "tictactoe.getOtherSide() not implemented, you should implement it.";
 }
 
 // tictactoe.newBoard(): Create a new game board with no moves made.
@@ -51,7 +59,7 @@ tictactoe.getOtherSide = function(xOrO) {
 // Note how we are putting arrays inside the array to represent contents of
 // rows.  This technique is also known as a 2-dimensional array. It is very
 // useful for representing 2-dimensional grids, like our Tic tac toe board.
-// 
+//
 // We can read 2-dimensional arrays using two index numbers: array[index 1][index 2]
 // Index 1 is the index into the outer array and index 2 is the index into the
 // inner array.
@@ -79,7 +87,14 @@ tictactoe.newBoard = function() {
 tictactoe.makeMove = function(board, row, column, xOrO) {
   // YOUR CODE HERE
   // Remove the next line!
-  throw "tictactoe.makeMove() not implemented, you should implement it.";
+  tictactoe.errorIfNotXOrO(xOrO);
+  if (board[row][column]!== ' ') {
+      throw row + ', ' + column + ' already occupied';
+  } else {
+    board[row][column] = xOrO;
+    return board;
+  }
+  // throw "tictactoe.makeMove() not implemented, you should implement it.";
 }
 
 
@@ -100,16 +115,16 @@ tictactoe.results = {
 // The result should be a key in tictactoe.results.
 //
 // ex. tictactoe.getResult(tictactoe.newBoard()) -> '?'
-// ex. tictactoe.getResult([["x", "o", "x"], 
+// ex. tictactoe.getResult([["x", "o", "x"],
 //                          ["x", "o", "x"],
 //                          ["o", "x", "o"]]) -> '-'
-// ex. tictactoe.getResult([["x", "o", " "], 
+// ex. tictactoe.getResult([["x", "o", " "],
 //                          ["o", "x", " "],
 //                          ["o", "x", "x"]]) -> 'x'
-// ex. tictactoe.getResult([["o", "o", "o"], 
+// ex. tictactoe.getResult([["o", "o", "o"],
 //                          ["x", "x", " "],
 //                          ["x", " ", " "]]) -> 'o'
-// ex. tictactoe.getResult([["o", "o", "x"], 
+// ex. tictactoe.getResult([["o", "o", "x"],
 //                          ["x", "x", "o"],
 //                          ["o", " ", " "]]) -> '?'
 tictactoe.getResult = function(board) {
@@ -148,14 +163,22 @@ tictactoe.getResult = function(board) {
     //     X O _
     //     _ O _
     //
-    // YOUR CODE HERE
+    for (var col = 0; col < board.length; col++) {
+      // For each row, if all boxes in the row are taken up by 'side',
+      // 'side' is the winner.
+      if (board[0][col] === side &&
+          board[1][col] === side &&
+          board[2][col] === side) {
+        return side;
+      }
+    }// YOUR CODE HERE
 
     // Check for victory first diagonal
     //
     // ex. X O O
     //     _ X _
     //     _ _ X
-    // 
+    //
     // YOUR CODE HERE
 
     // Check for victory second diagonal
@@ -164,8 +187,25 @@ tictactoe.getResult = function(board) {
     //     _ O X
     //     O X X
     //
-    // YOUR CODE HERE
+    if (board[0][2] === side &&
+          board[1][1] === side &&
+          board[2][0] === side) {
+        return side;
+      }
+    if (board[0][0] === side &&
+          board[1][1] === side &&
+          board[2][2] === side) {
+        return side;
+      }// YOUR CODE HERE
+    }
+  for (let row = 0; row < board.length; row++) {
+    for (let col = 0; col < board.length; col++) {
+      if(board[row][col] === ' ') {
+        return '?';
+      }
+    }
   }
+  return '-'
 
   // Check if there are any empty cells (boxes) on the board,
   // if so the game is in progress. Otherwise, the game is
@@ -181,13 +221,27 @@ tictactoe.getResult = function(board) {
 // Otherwise, you can make this function as smart or naive as you like.
 //
 // ex. tictactoe.getComputerMove(tictactoe.newBoard()) -> [0, 0]
-// ex. tictactoe.getComputerMove([["x", "o", "x"], 
+// ex. tictactoe.getComputerMove([["x", "o", "x"],
 //                                ["x", "o", "x"],
 //                                ["o", "x", "o"]]) -> Error
 tictactoe.getComputerMove = function(board, computerSide) {
   // YOUR CODE HERE
+  // let xocount = 0;
+  // let
+  for (let row = 0; row < board.length; row++){
+    for (let col = 0; col < board.length; col++) {
+      if (board[row][col] === ' ') {
+          // board[row][col] = computerSide;
+          return [row,col];
+      }
+    }
+  }
+  throw 'board is full'
+  // if (xocount % 2 ===0) {
+
+  // }
   // Remove the next line!
-  throw "tictactoe.getComputerMove() not implemented, you should implement it.";
+  // throw "tictactoe.getComputerMove() not implemented, you should implement it.";
 }
 
 // ----Game State Functions----
@@ -319,7 +373,7 @@ tictactoe.makeComputerMove = function() {
     throw "getComputerMove() returned invalid move: " + move;
   }
 
-  // Update the board with 
+  // Update the board with
   var board = tictactoe.makeMove(tictactoe.game.board, move[0], move[1], computerSide);
   if (! board) {
     throw "makeMove() returned invalid board: " + board;
@@ -334,9 +388,9 @@ tictactoe.makeComputerMove = function() {
 
 // ----Browser Interaction Functions----
 // These functions send updates to the browser and receive updates from the browser.
-// 
+//
 // Feel free to skip reading these functions for now.  We will learn about
-// interacting with the browser via JavaScript in the coming weeks.  
+// interacting with the browser via JavaScript in the coming weeks.
 
 // tictactoe.drawBoard(): Update the page with all game information. Updates
 // game result, player/computer side and redraws tic tac toe board.
