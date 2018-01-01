@@ -4,12 +4,12 @@
 // In this exercise we're building the game of Towers of Hanoi in the browser.
 // Very few functions are have been implemented for you this time.
 //
-// Rules: 
+// Rules:
 //  * You may only move one disk at a time.
 //  * You must never allow a bigger disk to go on top of a smaller disk.
 //  * All three disks start on the leftmost tower.
 //  * Game is won when all three disks are on the rightmost tower.
-// 
+//
 // Functions in this file are split into three groups
 //  * Game Functions
 //  * Browser Functions You Will Call
@@ -25,7 +25,7 @@ window.towers = {};
 
 // towers.newBoard(): create new Towers of Hanoi board in the starting state.
 // This is format towers.drawGame() expects your board to be in.
-towers.newBoard = function() { 
+towers.newBoard = function() {
   return [[2, 1, 0], [], []];
 };
 
@@ -91,6 +91,53 @@ towers.isNumber = function(something) {
 // ex. towers.isValidBoard([[2], [], [2, 0]]) -> false: duplicate disk 2
 // ex. towers.isValidBoard([[2], [3], [1, 0]]) -> false: invalid disk 3
 towers.isValidBoard = function(board) {
+  let count0 = 0;
+  let count1 = 0;
+  let count2 = 0;
+  if(!towers.isArray(board)) {
+    return false;
+  }
+  for (let i = 0; i < 3; i++) {
+    if(!towers.isArray(board[i])) {
+      return false;
+    }
+  }
+  let count = 0;
+  for (let i = 0; i < board.length; i ++) {
+    count += board[i].length;
+    for (let x  = 0; x < board[i].length; x++) {
+      if (board[i][x] > 2) {
+        return false;
+      }
+      if(board[i][x] === 0) {
+        count0++;
+        if(count0 > 1) {
+          return false;
+        }
+      }
+      if(board[i][x] === 1) {
+        count1++;
+        if(count1 > 1) {
+          return false;
+        }
+      }
+      if(board[i][x] === 2) {
+        count2++;
+        if(count2 > 1) {
+          return false;
+        }
+      }
+      // console.log(board[i].length);
+      if (board[i][x] < board[i][x+1]) {
+        return false;
+      }
+    }
+    // if ()
+  }
+  if(count < 3) {
+    return false;
+  }
+  return true;
   // YOUR CODE HERE
   // Delete the next line:
   throw "towers.isValidBoard() not implemented, you should implement it.";
@@ -109,9 +156,12 @@ towers.game = {
 //  * Call towers.drawGame() with updated board
 //  * Call towers.clearWin() to clear the win message
 towers.newGame = function() {
+  towers.game.board = towers.newBoard();
+  towers.drawGame(towers.game.board);
+  towers.clearWin();
   // YOUR CODE HERE
   // Delete the next line:
-  throw "towers.newGame() not implemented, you should implement it.";
+  // throw "towers.newGame() not implemented, you should implement it.";
 }
 
 // towers.copyBoard(board): Make a copy of the given board and return it.
@@ -139,19 +189,53 @@ towers.copyBoard = function(board) {
 //  * The FROM tower is empty
 //  * The disk at the top of FROM tower is larger than the disk at the top of
 //    TO tower (you can rely on isValidBoard for this one)
-// 
+//
 // This function should:
 //  * Use towers.copyBoard() to copy the board to make test moves.
 //  * Use towers.isValidBoard() to verify if the board is valid after test moves move.
 //  * If move is valid, update the saved board (maybe in towers.game.board?)
 //  * Call towers.drawGame() with updated board
 //  * If the player has completed the game successfully call towers.win()
-// 
+//
 // ex. towers.makeMove(0, 1) -> move disk from tower 0 to tower 1
 towers.makeMove = function(fromTower, toTower) {
+  let x = towers.copyBoard(towers.game.board);
+  console.log(x);
+  if (x[fromTower] === []) {
+    throw 'Empty';
+  }
+
+  let fromend = x[fromTower][x[fromTower].length-1];
+  // console.log(fromend);
+  if (typeof fromend === 'number') {
+    x[toTower].push(fromend);
+    x[fromTower].pop();
+  }
+  // console.log(x);
+  // console.log(x);
+  if (!towers.isValidBoard(x)) {
+    throw 'Error';
+  }
+  if(towers.isValidBoard(x)) {
+    towers.game.board = x;
+    // if(towers.isValidBoard(towers.game.board)) {
+    //   towers.game.board;
+    // }
+    console.log(towers.game.board);
+    if (towers.game.board[2][0] === 2 &&
+        towers.game.board[2][1] === 1 &&
+        towers.game.board[2][2] === 0) {
+      towers.win();
+    }
+    towers.drawGame(towers.game.board);
+  }
+
+
+
+
   // YOUR CODE HERE
   // Delete the next line:
-  throw "towers.makeMove() not implemented, you should implement it.";
+  // throw "towers.makeMove() not implemented, you should implement it.";
 }
 
 // ----Browser Functions You Will Call----
@@ -206,7 +290,7 @@ towers.clearWin = function() {
 // You can still read them if you're curious.
 
 // towers.select(): Select tower to move a disk FROM.
-// Highlights selected tower and saved tower number. 
+// Highlights selected tower and saved tower number.
 towers.select = function(i) {
   console.log('Player selected tower %s', i);
   document.getElementsByClassName('tower' + i)[0].classList.toggle('selected')
