@@ -41,7 +41,15 @@ window.hangman = window.hangman || {};
 // ex. hangman.isGuessWrong('dog', 'do') -> Error!
 hangman.isGuessWrong = function(word, guess) {
   // YOUR CODE HERE
-  throw "hangman.isGuessWrong() is not implemented, you should implement it.";
+  if (guess.length > 1) {
+    throw 'Too many letter!'
+  }
+  if (word.indexOf(guess) > -1) {
+    return false;
+  } else {
+    return true;
+  }
+  // throw "hangman.isGuessWrong() is not implemented, you should implement it.";
 }
 
 // hangman.words: a word is randomly chosen from this array when a new game starts.
@@ -58,6 +66,8 @@ hangman.getRandomInteger = function(min, max) {
 //
 // ex. getRandomWord() -> 'cat'
 hangman.getRandomWord = function() {
+  let x = hangman.getRandomInteger(0,5);
+  return hangman.words[x];
   // YOUR CODE HERE
   throw "hangman.getRandomWord() is not implemented, you should implement it.";
 }
@@ -66,11 +76,11 @@ hangman.getRandomWord = function() {
 // When player makes this many wrong guesses, the game is over and the player loses.
 hangman.maxWrongGuesses = 6;
 
-// hangman.getGameStatus(word, guesses): take a word and an array of guesses and 
+// hangman.getGameStatus(word, guesses): take a word and an array of guesses and
 // returns a string indicating the game state.
 //
 // Returns 'lose': if the number of wrong guesses is greater than or equal to
-//                 hangman.maxWrongGuesses 
+//                 hangman.maxWrongGuesses
 // Returns 'win': if all the letters in word have been guessed
 // Returns 'in_progress': if game is not over yet
 //
@@ -82,6 +92,33 @@ hangman.maxWrongGuesses = 6;
 // ex. hangman.getGameStatus('cat', ['x', 'y', 'z', 'b', 'd', 'e']) -> 'lose'
 // ex. hangman.getGameStatus('carrot', ['c', 'a', 'r', 'o', 't']) -> 'win'
 hangman.getGameStatus = function(word, guesses) {
+  let count = 0;
+  let right = word.length;
+  let rightcount = 0;
+  for (let x = 0; x < guesses.length;x++) {
+    if(hangman.isGuessWrong(word,guesses[x])) {
+      count++;
+      if (count >= hangman.maxWrongGuesses) {
+        return 'lose';
+      }
+    } else {
+      if (word.substring(word.indexOf(guesses[x])+1) > -1) {
+        // console.log('does it run')
+        rightcount++;
+      }
+      rightcount++;
+
+      if (rightcount >= right) {
+        return 'win';
+      }
+    }
+
+  }
+  if (guesses.length < word.length) {
+    return 'in_progress';
+  }
+  return 'in_progress'
+
   // YOUR CODE HERE
   throw "hangman.getGameStatus() is not implemented, you should implement it.";
 }
@@ -105,8 +142,11 @@ hangman.game = {
 //  * set hangman.game.guesses to be an empty array []
 //  * draw the game in the browser with hangman.drawGame() after state has been updated
 hangman.startGame = function() {
+  hangman.game.word = hangman.getRandomWord();
+  hangman.game.guesses = [];
+  hangman.drawGame();
   // YOUR CODE HERE
-  throw "hangman.startGame() is not implemented, you should implement it.";
+  // throw "hangman.startGame() is not implemented, you should implement it.";
 }
 
 // hangman.makeGuess(letter): This function is called when the player makes a guess.
@@ -117,14 +157,19 @@ hangman.startGame = function() {
 //  * add letter to the array of guesses (hangman.game.guesses)
 //  * draw the game in the browser with hangman.drawGame() after state has been updated
 hangman.makeGuess = function(letter) {
+  if(hangman.getGameStatus(hangman.game.word, hangman.game.guesses) === 'lose' || hangman.getGameStatus(hangman.game.word,hangman.game.guesses) === 'win') {
+    throw 'Game is over';
+  }
+  hangman.game.guesses.push(letter);
+  hangman.drawGame();
   // YOUR CODE HERE
-  throw "hangman.makeGuess() is not implemented, you should implement it.";
+  // throw "hangman.makeGuess() is not implemented, you should implement it.";
 }
 
 // ----Browser Functions----
 // These are functions that handle interaction with the browser. You only need
 // to use hangman.drawGame() but you can look at the others also.
-// 
+//
 // hangman.drawGame(): Update the browser to display the latest state of the game.
 //
 // Make sure you update hangman.game before calling this function as it reads game
@@ -144,7 +189,7 @@ hangman.drawGame = function() {
   });
   var guessesLeft = hangman.maxWrongGuesses - wrongGuesses.length;
   document.getElementById('guessesLeft').innerHTML = guessesLeft + '';
-  
+
   var imgSrc = ['img/hangman', wrongGuesses.length, '.png'].join('');
   document.getElementById('man').src = imgSrc;
 
@@ -175,7 +220,7 @@ hangman.drawGame = function() {
   document.getElementById('status').innerHTML = statuses[status];
 }
 
-// hangman.playerLetterClick(event): This function is called when the player clicks on 
+// hangman.playerLetterClick(event): This function is called when the player clicks on
 // a letter to make a guess. This function in turn calls hangman.makeGuess() with the
 // button that the user clicked on.
 // It also handles disabling buttons once they are clicked.
